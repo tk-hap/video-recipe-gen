@@ -10,5 +10,5 @@ def home_form():
 
 @app.route('/', methods=['POST'])
 def submit_video():
-    video_id = request.form['text']
+    video_id = request.form['video']
     return create_recipe(transcribe_video(video_id))

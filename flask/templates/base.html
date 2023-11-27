@@ -2,8 +2,18 @@
 <html>
     <head>
         <title>Create Recipe</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     </head>
     <body>
-        <div id="content">{% block content %}{% endblock %}</div>
+        <header class="container">
+            <hgroup>
+                {% block header %}{% endblock %}
+            </hgroup> 
+        </header>
+        <main id="content">
+            {% block content %}{% endblock %}
+        </main>
     </body>
 </html>

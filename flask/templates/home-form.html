@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+{% block header %}
+<h1>AI video to recipe converter</h1>
+<h2>Convert a YouTube video to a recipe</h2>
+{% endblock %}
 {% block content %}
 <form method="POST">
-    <input name="text">
-    <input type="submit">
+    <input name="video">
+    <button>Submit</button>
 </form>
 {% endblock %}
