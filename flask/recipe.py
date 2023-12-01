@@ -1,20 +1,23 @@
 from openai import OpenAI
+import toml
+
+
 client = OpenAI()
 
+def assemble_prompt(video_text: str) -> list:
+    with open('config.toml', 'r') as config_file:
+        config = toml.load(config_file)
+    return [
+        {"role": "system", "content": config["prompts"]["role_prompt"]},
+        {"role": "system", "content": config["prompts"]["instruction_prompt"]},
+        {"role": "user", "content": f"""{video_text}"""}
+    ]
+    
 
-def create_recipe(video_text):
+def create_recipe(video_text: str):
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are an experienced food writer, skilled at writing accurate recipes.",
-            },
-            {
-                "role": "user",
-                "content": f"You will be provided with a transcript of a cooking video (delimited with XML tags). Please summarize the transcript to create a recipe. Please be accurate to the transcript. Return the recipe in html starting with a list of the required and optional ingredients followed by the directions to make the dish. The video transcript is delimited by triple quotes. <recipe>{video_text}</recipe>",
-            },
-        ],
+        messages=assemble_prompt(video_text)
     )
     return completion.choices[0].message.content
 
