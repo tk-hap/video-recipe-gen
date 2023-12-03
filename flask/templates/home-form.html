@@ -6,7 +6,9 @@
 {% block content %}
 <form hx-post="/recipe" hx-indicator="#recipe_loading" hx-target="#recipe_loading" hx-swap="outerHTML">
     <div class="grid">
-        <input name="video" placeholder="https://www.youtube.com/watch?v=kJhv2QUE2LA">
+        <div>
+            <input name="video" type="url" placeholder="https://www.youtube.com/watch?v=kJhv2QUE2LA">
+        </div> 
         <button>Submit</button>
     </div>
 </form>
