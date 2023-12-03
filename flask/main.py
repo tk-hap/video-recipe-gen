@@ -1,5 +1,6 @@
+import os
 from flask import Flask, request, render_template
-from transcribe import get_video_id, transcribe_video
+from transcribe import validate_video, get_video_id, transcribe_video
 from recipe import create_recipe
 
 app = Flask(__name__)
@@ -11,9 +12,12 @@ def home_form():
 @app.route('/recipe', methods=['POST'])
 def submit_video():
     url = request.form['video']
-    try:
-        video_id = get_video_id(url)
-    except IndexError:
-        return "Error"
+    # if not validate_video(url):
+    #     return render_template('invalid-video.html', url=url)
+    video_id = get_video_id(url)
     recipe_html = create_recipe(transcribe_video(video_id))
     return render_template('recipe.html', recipe_html=recipe_html)
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
