@@ -4,7 +4,7 @@
 <h2>Convert a YouTube video to a recipe</h2>
 {% endblock %}
 {% block content %}
-<form hx-post="/recipe" hx-indicator="#recipe_loading" hx-target="#recipe_loading" hx-swap="outerHTML">
+<form hx-post="/recipe" hx-indicator="#recipe_loading" hx-target="#recipe_loaded" hx-swap="outerHTML">
     <div class="grid">
         <div>
             <input name="video" type="url" placeholder="https://www.youtube.com/watch?v=kJhv2QUE2LA">
@@ -12,6 +12,7 @@
         <button>Submit</button>
     </div>
 </form>
-<article id="recipe_loading" class="htmx-indicator" aria-busy="true">Please wait...</article>
+<span id="recipe_loading" class="htmx-indicator" aria-busy="true">Please wait...</span>
+<div id="recipe_loaded"></div>
 
 {% endblock %}
