@@ -8,7 +8,7 @@ app = Flask(__name__)
 def home_form():
     return render_template('home-form.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/recipe', methods=['POST'])
 def submit_video():
     url = request.form['video']
     try:
@@ -17,3 +17,8 @@ def submit_video():
         return "Error"
     recipe_html = create_recipe(transcribe_video(video_id))
     return render_template('recipe.html', recipe_html=recipe_html)
+
+
+@app.route('/button_loading', methods=['GET'])
+def button_click():
+    return ''
