@@ -8,7 +8,7 @@ app = Flask(__name__)
 def home_form():
     return render_template('home-form.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/recipe', methods=['POST'])
 def submit_video():
     url = request.form['video']
     try:
