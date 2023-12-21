@@ -8,11 +8,11 @@ def validate_video(url: str) -> bool:
     # TODO: Make this logic more robust, probably needs a regex
     print(url)
     valid_prefixes = [
-        "https://youtube.com/watch?v=",
-        "youtube.com/watch?v=",
-        "youtube.com/watch?v=",
+        "https://www.youtube.com/watch?v=",
+        "wwww.youtube.com/watch?v=",
+        'youtube.com/watch?v='
     ]
-    return all(map(url.startswith, valid_prefixes))
+    return any(map(url.startswith, valid_prefixes))
 
 
 def get_video_id(url: str) -> str:
