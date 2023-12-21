@@ -1,5 +1,18 @@
 {% block content %}
 <article id="recipe_loaded">
-    {{ recipe_html|safe }} 
+    <h2>{{ recipe.title }}</h2>
+    <h4>Ingredients</h4>
+    <ul>
+    {% for ing in recipe.ingredients %}
+        <li>{{ ing }}</li>
+    {% endfor %}
+    </ul>
+    <h4>Instructions</h4>
+    <ol>
+    {% for step in recipe.instructions %}
+        <li>{{ step }}</li>
+    {% endfor %}
+    </ol>
+    <p>{{ recipe.notes }}</p>
 </article>
 {% endblock %}
