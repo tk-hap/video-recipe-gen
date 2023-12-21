@@ -1,8 +1,17 @@
 from openai import OpenAI
+from pydantic import BaseModel
 import toml
+import instructor 
 
 
-client = OpenAI()
+client = instructor.patch(OpenAI())
+
+class RecipeDetails(BaseModel):
+    title: str
+    ingredients: list
+    instructions: list
+    notes: str = ''
+
 
 def assemble_prompt(video_text: str) -> list:
     with open('config.toml', 'r') as config_file:
@@ -15,10 +24,13 @@ def assemble_prompt(video_text: str) -> list:
     
 
 def create_recipe(video_text: str):
-    completion = client.chat.completions.create(
+    recipe = client.chat.completions.create(
         model="gpt-3.5-turbo",
+        response_model=RecipeDetails,
         messages=assemble_prompt(video_text)
     )
-    return completion.choices[0].message.content
+    assert isinstance(recipe, RecipeDetails)
+    #print(recipe.title, recipe.ingredients, recipe.instructions, recipe.notes)
+    return recipe 
 
 

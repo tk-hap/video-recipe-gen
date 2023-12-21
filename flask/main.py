@@ -14,8 +14,8 @@ def submit_video():
     url = request.form['video']
     if validate_video(url):
         video_id = get_video_id(url)
-        recipe_html = create_recipe(transcribe_video(video_id))
-        return render_template('recipe.html', recipe_html=recipe_html)
+        recipe = create_recipe(transcribe_video(video_id))
+        return render_template('recipe.html', recipe=recipe)
     else:
         return ('', 204)
 
