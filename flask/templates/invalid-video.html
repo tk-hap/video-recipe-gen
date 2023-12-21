@@ -1,0 +1,9 @@
+<div hx-target="#form-div" hx-swap="innerHTML" class="error">
+    <label for="video">
+        Invalid YouTube URL!
+        <input name="video" hx-post="/recipe/url" aria-invalid="true" value={{ url }}>
+    </label>
+</div>
+<div>
+    <button disabled>Submit</button>
+</div>
