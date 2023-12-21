@@ -5,11 +5,15 @@
 {% endblock %}
 {% block content %}
 <form hx-post="/recipe" hx-indicator="#recipe_loading" hx-target="#recipe_loaded" hx-swap="outerHTML">
-    <div class="grid">
+    <div id="form-div" class="form-div">
+        <div hx-target="#form-div" hx-swap="innerHTML">
+            <label for="video">
+                <input name="video" hx-post="/recipe/url" placeholder="https://www.youtube.com/watch?v=kJhv2QUE2LA">
+            </label>
+        </div>
         <div>
-            <input name="video" type="url" placeholder="https://www.youtube.com/watch?v=kJhv2QUE2LA">
-        </div> 
-        <button>Submit</button>
+            <button>Submit</button>
+        </div>
     </div>
 </form>
 <span id="recipe_loading" class="htmx-indicator" aria-busy="true">Please wait...</span>
