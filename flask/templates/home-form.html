@@ -4,7 +4,7 @@
 <h2>Convert a YouTube video to a recipe</h2>
 {% endblock %}
 {% block content %}
-<form hx-post="/recipe" hx-indicator="#recipe_loading" hx-target="#recipe_loaded" hx-swap="outerHTML">
+<form id="recipe_form" hx-post="/recipe" hx-indicator="#recipe_loading" hx-target="#recipe_loaded" hx-swap="outerHTML">
     <div id="form-div" class="form-div">
         <div hx-target="#form-div" hx-swap="innerHTML">
             <label for="video">
