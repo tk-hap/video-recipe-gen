@@ -15,6 +15,7 @@ def validate_url(url: str) -> bool:
     return any(map(url.startswith, valid_prefixes))
 
 
+
 def get_video_id(url: str) -> str:
     video_url_list = url.split("=", maxsplit=1)
     return video_url_list[1]

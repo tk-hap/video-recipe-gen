@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, render_template, make_response, url_for
-from transcribe import validate_url, get_video_id, transcribe_video
+from video import validate_url, get_video_id, transcribe_video
 from recipe import create_recipe
 import redis
 
