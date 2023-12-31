@@ -4,7 +4,7 @@ from youtube_transcript_api.formatters import TextFormatter
 formatter = TextFormatter()
 
 
-def validate_video(url: str) -> bool:
+def validate_url(url: str) -> bool:
     # TODO: Make this logic more robust, probably needs a regex
     print(url)
     valid_prefixes = [

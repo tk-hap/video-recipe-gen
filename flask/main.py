@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, render_template, make_response, url_for
-from transcribe import validate_video, get_video_id, transcribe_video
+from transcribe import validate_url, get_video_id, transcribe_video
 from recipe import create_recipe
 import redis
 
@@ -27,7 +27,7 @@ def max_requests():
 @app.route("/recipe", methods=["POST"])
 def submit_video():
     url = request.form["video"]
-    if validate_video(url):
+    if validate_url(url):
         video_id = get_video_id(url)
         # Check if the user has exceeded the rate limit
         if not redis_client.exists(request.remote_addr):
@@ -48,7 +48,7 @@ def submit_video():
 @app.route("/recipe/url", methods=["POST"])
 def validate_url():
     url = request.form["video"]
-    if not validate_video(url):
+    if not validate_url(url):
         return render_template("invalid-video.html", url=url)
     else:
         return render_template("valid-video.html", url=url)
