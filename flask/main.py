@@ -26,7 +26,7 @@ def submit_video():
     if validate_url(url):
         video_id = get_video_id(url)
         if not validate_video_content(video_id):
-            return "Not a cooking video!"
+            return render_template("invalid-recipe.html")
         # Check if the user has exceeded the rate limit
         if not redis_client.exists(request.remote_addr):
             redis_client.set(request.remote_addr, 0)
