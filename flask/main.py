@@ -1,15 +1,11 @@
 import os
 from flask import Flask, request, render_template, make_response, url_for
 from video import validate_url, get_video_id, transcribe_video, validate_video_content
-from recipe import create_recipe    
+from recipe import create_recipe
+from config import REDIS_HOST, REDIS_PORT, REQUEST_LIMIT, REQUEST_TIMEOUT_SECS
 import redis
 
-redis_host = os.environ.get("REDISHOST", "localhost")
-redis_port = int(os.environ.get("REDISPORT", 6379))
-redis_client = redis.Redis(host=redis_host, port=redis_port)
-
-request_limit = int(os.environ.get("REQUEST_LIMIT", 3))
-request_timeout_secs = int(os.environ.get("REQUEST_TIMEOUT_SECS", 60))
+redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 
 app = Flask(__name__)
 
@@ -34,8 +30,8 @@ def submit_video():
         # Check if the user has exceeded the rate limit
         if not redis_client.exists(request.remote_addr):
             redis_client.set(request.remote_addr, 0)
-            redis_client.expire(request.remote_addr, request_timeout_secs)
-        elif int(redis_client.get(request.remote_addr)) >= request_limit:
+            redis_client.expire(request.remote_addr, REQUEST_TIMEOUT_SECS)
+        elif int(redis_client.get(request.remote_addr)) >= REQUEST_LIMIT:
             response = make_response("", 429)
             response.headers["HX-Redirect"] = url_for("max_requests")
             return response

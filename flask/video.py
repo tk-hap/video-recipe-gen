@@ -1,10 +1,9 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 from googleapiclient.discovery import build
-import os
+from config import YOUTUBE_API_KEY
 
 formatter = TextFormatter()
-yt_api_key = os.environ.get("YOUTUBE_API_KEY")
 
 # TODO: Create a video class
 
@@ -21,7 +20,7 @@ def validate_url(url: str) -> bool:
 
 
 def validate_video_content(url: str) -> bool:
-    with build("youtube", "v3", developerKey=yt_api_key) as yt_service:
+    with build("youtube", "v3", developerKey=YOUTUBE_API_KEY) as yt_service:
         request = yt_service.videos().list(part="snippet", id=url)
         response = request.execute()
 
