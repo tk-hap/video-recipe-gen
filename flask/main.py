@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, render_template, make_response, url_for
-from video import validate_url, get_video_id, transcribe_video
-from recipe import create_recipe
+from video import validate_url, get_video_id, transcribe_video, validate_video_content
+from recipe import create_recipe    
 import redis
 
 redis_host = os.environ.get("REDISHOST", "localhost")
@@ -29,14 +29,16 @@ def submit_video():
     url = request.form["video"]
     if validate_url(url):
         video_id = get_video_id(url)
+        if not validate_video_content(video_id):
+            return "Not a cooking video!"
         # Check if the user has exceeded the rate limit
         if not redis_client.exists(request.remote_addr):
             redis_client.set(request.remote_addr, 0)
             redis_client.expire(request.remote_addr, request_timeout_secs)
         elif int(redis_client.get(request.remote_addr)) >= request_limit:
-            resp = make_response("", 429)
-            resp.headers["HX-Redirect"] = url_for("max_requests")
-            return resp
+            response = make_response("", 429)
+            response.headers["HX-Redirect"] = url_for("max_requests")
+            return response
 
         recipe = create_recipe(transcribe_video(video_id))
         redis_client.incr(request.remote_addr)
@@ -46,7 +48,7 @@ def submit_video():
 
 
 @app.route("/recipe/url", methods=["POST"])
-def validate_url():
+def validate_video():
     url = request.form["video"]
     if not validate_url(url):
         return render_template("invalid-video.html", url=url)

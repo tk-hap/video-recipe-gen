@@ -1,7 +1,12 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
+from googleapiclient.discovery import build
+import os
 
 formatter = TextFormatter()
+yt_api_key = os.environ.get("YOUTUBE_API_KEY")
+
+# TODO: Create a video class
 
 
 def validate_url(url: str) -> bool:
@@ -10,10 +15,30 @@ def validate_url(url: str) -> bool:
     valid_prefixes = [
         "https://www.youtube.com/watch?v=",
         "wwww.youtube.com/watch?v=",
-        'youtube.com/watch?v='
+        "youtube.com/watch?v=",
     ]
     return any(map(url.startswith, valid_prefixes))
 
+
+def validate_video_content(url: str) -> bool:
+    with build("youtube", "v3", developerKey=yt_api_key) as yt_service:
+        request = yt_service.videos().list(part="snippet", id=url)
+        response = request.execute()
+
+        title = response["items"][0]["snippet"]["title"]
+        description = response["items"][0]["snippet"]["description"]
+        tags = response["items"][0]["snippet"].get("tags")
+
+        cooking_keywords = ["cook", "cooking", "recipe", "food", "bake", "baking"]
+        for keyword in cooking_keywords:
+            if (
+                keyword in title.lower()
+                or keyword in description.lower()
+                or keyword in tags
+            ):
+                return True
+        else:
+            return False
 
 
 def get_video_id(url: str) -> str:
@@ -22,9 +47,5 @@ def get_video_id(url: str) -> str:
 
 
 def transcribe_video(video_id: str) -> str:
-    if video_id == "Invalid YouTube URL":
-        return video_id
-    else:
-        video_transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        text_formatted = formatter.format_transcript(video_transcript)
-        return text_formatted
+    video_transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    return formatter.format_transcript(video_transcript)
