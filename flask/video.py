@@ -2,6 +2,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 from googleapiclient.discovery import build
 from config import YOUTUBE_API_KEY
+import re
 
 formatter = TextFormatter()
 
@@ -10,7 +11,6 @@ formatter = TextFormatter()
 
 def validate_url(url: str) -> bool:
     # TODO: Make this logic more robust, probably needs a regex
-    print(url)
     valid_prefixes = [
         "https://www.youtube.com/watch?v=",
         "wwww.youtube.com/watch?v=",
@@ -26,7 +26,8 @@ def validate_video_content(url: str) -> bool:
 
         title = response["items"][0]["snippet"]["title"]
         description = response["items"][0]["snippet"]["description"]
-        tags = response["items"][0]["snippet"].get("tags")
+        tags = []
+        tags.append(response["items"][0]["snippet"].get("tags"))
 
         cooking_keywords = ["cook", "cooking", "recipe", "food", "bake", "baking"]
         for keyword in cooking_keywords:
@@ -41,8 +42,9 @@ def validate_video_content(url: str) -> bool:
 
 
 def get_video_id(url: str) -> str:
-    video_url_list = url.split("=", maxsplit=1)
-    return video_url_list[1]
+    reg = r"^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*"
+    video_id = re.search(reg, url).group(1)
+    return video_id
 
 
 def transcribe_video(video_id: str) -> str:
