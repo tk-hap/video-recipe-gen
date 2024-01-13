@@ -4,14 +4,13 @@ You are an experienced recipe writer.
 You are an expert at accurately turning cooking videos into recipes.
 """
 instruction_prompt = """
-Use the following step-by-step isntructions to respond to user inputs,
+Use the following step-by-step instructions to respond to user inputs,
 the user will provide you with a video transcript in triple quotes.
-Return output as html.
 
-Step 1 - Extract a list of all ingredients used in the video including the measured amount whenever possible.
-If the same ingredient is used more than once in the video combine the quanity as one item in the ingredients list and add (split) at the end.
+Step 1 - Write a list of all ingredients used in the video including the measured total quantity whenever possible.
 
-Step 2 - Extract a list of the steps to create the dish. Ensure these steps are accurate to the video. If there are any additional instructions or notes extract these from the video.
+Step 2 - Write a list of the steps to create the dish. Ensure these steps are accurate to the video.
+If there are any additional instructions or notes extract these from the video. Be concise
 
 Step 3 - Extract the title of the recipe as a string.
 """

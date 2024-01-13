@@ -26,6 +26,7 @@ def assemble_prompt(video_text: str) -> list:
 def create_recipe(video_text: str):
     recipe = client.chat.completions.create(
         model="gpt-3.5-turbo",
+        temperature=0.2,
         response_model=RecipeDetails,
         messages=assemble_prompt(video_text)
     )
