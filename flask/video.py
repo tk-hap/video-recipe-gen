@@ -1,7 +1,8 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 from googleapiclient.discovery import build
-from config import YOUTUBE_API_KEY
+from config import YOUTUBE_API_KEY, MAX_VIDEO_LENGTH
+from isodate import parse_duration
 import re
 
 formatter = TextFormatter()
@@ -21,14 +22,17 @@ def validate_url(url: str) -> bool:
 
 def validate_video_content(url: str) -> bool:
     with build("youtube", "v3", developerKey=YOUTUBE_API_KEY) as yt_service:
-        request = yt_service.videos().list(part="snippet", id=url)
+        request = yt_service.videos().list(part="snippet,contentDetails", id=url)
         response = request.execute()
+
+        duration = response["items"][0]["contentDetails"]["duration"]
+        if parse_duration(duration) > parse_duration(MAX_VIDEO_LENGTH):
+            return False
 
         title = response["items"][0]["snippet"]["title"]
         description = response["items"][0]["snippet"]["description"]
         tags = []
         tags.append(response["items"][0]["snippet"].get("tags"))
-
         cooking_keywords = ["cook", "cooking", "recipe", "food", "bake", "baking"]
         for keyword in cooking_keywords:
             if (
