@@ -2,6 +2,8 @@
 
 This application transcribes a YouTube cooking video and uses OpenAI's GPT-3 model to summarize the transcript into a recipe.
 
+Try it at https://videorecipegen.com/
+
 ## Features
 
 - Transcribes YouTube cooking videos into text.
