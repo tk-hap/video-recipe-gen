@@ -25,7 +25,7 @@ Try it at https://videorecipegen.com/
 
 1. Clone the repository.
 2. Install the dependencies with `pip install -r requirements.txt`.
-3. Run a redis docker container with `docker run --name my-redis -d -p 6379:6379`.
+3. Run a redis docker container with `docker run --name my-redis -d redis -p 6379:6379`.
 3. Create a .env file with your `OPENAI_API_KEY` and `YOUTUBE_API_KEY` values, you may also optionally set environment variables for the Redis, request limit and max video length settings.
 4. Run the application from the /flask directory with `flask --app main run`.
 
