@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, make_response, url_for, send_file
+from flask import Flask, request, render_template, make_response, url_for, send_file, abort
 from video import validate_url, get_video_id, transcribe_video, validate_video_content
 from recipe import create_recipe
 from config import REDIS_HOST, REDIS_PORT, REQUEST_LIMIT, REQUEST_TIMEOUT_SECS
@@ -42,12 +42,14 @@ def submit_video():
         recipe.details = create_recipe(transcribe_video(recipe.video_id))
         recipe.generate_html()
         redis_client.incr(request.remote_addr)
-        return recipe.html_recipe
+        return render_template(
+            "display-recipe.html", video_id=recipe.video_id, recipe=recipe.details
+        )
     else:
         return ("", 204)
 
 
-@app.route("/recipe/<video_id>/pdf")
+@app.route("/recipe/<video_id>/pdf", methods=["GET", "POST"])
 def export_pdf(video_id: str) -> bytes:
     if recipe.video_id == video_id:
         recipe.generate_pdf()
@@ -57,6 +59,8 @@ def export_pdf(video_id: str) -> bytes:
             as_attachment=True,
             download_name=f"{recipe.details.title}.pdf",
         )
+    else:
+        abort(404)
 
 
 @app.route("/recipe/url", methods=["POST"])

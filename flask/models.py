@@ -21,7 +21,7 @@ class RecipeGenerator:
     def generate_html(self) -> str:
         self.html_recipe = (
             jinja2.Environment(loader=jinja2.FileSystemLoader("templates/"))
-            .get_template("recipe.html")
+            .get_template("base-recipe.html")
             .render(recipe=self.details)
         )
         return self.html_recipe
