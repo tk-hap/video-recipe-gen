@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 # Allow statements and log messages to immediately appear in the logs
 ENV PYTHONUNBUFFERED True
@@ -10,6 +10,13 @@ COPY . ./
 
 # Install production dependencies.
 RUN pip install --no-cache-dir -r requirements.txt
+
+
+# Install WeasyPrint dependencies (libcairo2, libpango-1.0-0, libpangocairo-1.0-0, libgdk-pixbuf2.0-0)
+RUN apt-get update && \
+    apt-get install -y libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.

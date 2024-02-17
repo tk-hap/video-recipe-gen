@@ -1,0 +1,22 @@
+{% block content %}
+<h2>{{ recipe.title }}</h2>
+<div class="grid">
+    <div id="ingredients">
+        <h4>Ingredients:</h4>
+        <ul>
+            {% for ing in recipe.ingredients %}
+            <li>{{ ing }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="instructions">
+        <h4>Instructions:</h4>
+        <ol>
+            {% for step in recipe.instructions %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+        <p>{{ recipe.notes }}</p>
+    </div>
+</div>
+{% endblock %}
