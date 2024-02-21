@@ -23,6 +23,7 @@ def create_recipe(video_text: str):
         model="gpt-3.5-turbo-1106",
         temperature=0.2,
         response_model=RecipeDetails,
+        max_retries=3,
         messages=assemble_prompt(video_text)
     )
     assert isinstance(recipe_details, RecipeDetails)
