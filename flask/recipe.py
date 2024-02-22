@@ -1,10 +1,13 @@
 from openai import OpenAI
 from pydantic import BaseModel
 import toml
-import instructor 
+import instructor
+import structlog
 from models import RecipeDetails
 
 #TODO: Could use langchain summarization to create recipes from longer transcriptions.
+
+logger = structlog.get_logger()
 
 client = instructor.patch(OpenAI())
 
@@ -21,12 +24,11 @@ def assemble_prompt(video_text: str) -> list:
 def create_recipe(video_text: str):
     recipe_details = client.chat.completions.create(
         model="gpt-3.5-turbo-1106",
+        max_retries=3, #If pydantic validation fails, model will be reprompted
         temperature=0.2,
         response_model=RecipeDetails,
         messages=assemble_prompt(video_text)
     )
-    assert isinstance(recipe_details, RecipeDetails)
-    #print(recipe.title, recipe.ingredients, recipe.instructions, recipe.notes)
     return recipe_details 
 
 

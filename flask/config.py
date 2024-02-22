@@ -13,7 +13,13 @@ LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 
 # Configure structured logging
 structlog.configure(
-    wrapper_class=structlog.make_filtering_bound_logger(getattr(logging, LOG_LEVEL))
+    wrapper_class=structlog.make_filtering_bound_logger(getattr(logging, LOG_LEVEL)),
+    processors=[
+        structlog.processors.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.JSONRenderer(),
+    ]
 )
 logger = structlog.get_logger()
 
+logger.info("Log entry should be in JSON")
