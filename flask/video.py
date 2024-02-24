@@ -4,6 +4,9 @@ from googleapiclient.discovery import build
 from config import YOUTUBE_API_KEY, MAX_VIDEO_LENGTH
 from isodate import parse_duration
 import re
+import structlog
+
+logger = structlog.get_logger()
 
 formatter = TextFormatter()
 
@@ -17,7 +20,12 @@ def validate_url(url: str) -> bool:
         "wwww.youtube.com/watch?v=",
         "youtube.com/watch?v=",
     ]
-    return any(map(url.startswith, valid_prefixes))
+    if any(map(url.startswith, valid_prefixes)):
+        logger.info("Valid youtube url", video_url=url)
+        return True
+    else:
+        logger.info("Invalid youtube url", video_url=url)
+        return False
 
 
 def validate_video_content(url: str) -> bool:
@@ -27,6 +35,7 @@ def validate_video_content(url: str) -> bool:
 
         duration = response["items"][0]["contentDetails"]["duration"]
         if parse_duration(duration) > parse_duration(MAX_VIDEO_LENGTH):
+            logger.info("Video duration too long", video_duration=duration, max_duration=MAX_VIDEO_LENGTH) 
             return False
 
         title = response["items"][0]["snippet"]["title"]
@@ -40,9 +49,11 @@ def validate_video_content(url: str) -> bool:
                 or keyword in description.lower()
                 or keyword in tags
             ):
+                logger.info("Cooking tags found", video_tags=tags, video_url=url)
                 return True
         else:
-            return False
+                logger.info("No cooking tags found", video_tags=tags, video_url=url)
+                return False
 
 
 def get_video_id(url: str) -> str:
