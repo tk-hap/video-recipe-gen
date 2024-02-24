@@ -27,7 +27,6 @@ def create_recipe(video_text: str):
         max_retries=3, #If pydantic validation fails, model will be reprompted
         temperature=0.2,
         response_model=RecipeDetails,
-        max_retries=3,
         messages=assemble_prompt(video_text)
     )
     return recipe_details 
