@@ -22,4 +22,4 @@ structlog.configure(
 )
 logger = structlog.get_logger()
 
-logger.info("Log entry should be in JSON")
+logger.info("Logger started")
