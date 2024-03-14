@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vid-recipe-gen-web
+  labels:
+    service: web
+    app: vid-recipe-gen-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vid-recipe-gen-web
+  template:
+    metadata:
+      labels:
+        service: web
+        app: vid-recipe-gen-web
+    spec:
+      containers:
+      - name: flask
+        image: ghcr.io/tk-hap/video-recipe-gen-flask:148ac16ecba809972c933a2e6827dae7713ed83b
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: dockerconfigjson-ghcr-io
