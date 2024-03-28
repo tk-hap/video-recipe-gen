@@ -25,7 +25,6 @@ def validate_url(url: str) -> bool:
         logger.info("Valid youtube url", video_url=url)
         return True
     else:
-        logger.info("Invalid youtube url", video_url=url)
         return False
 
 
@@ -64,8 +63,12 @@ def validate_video_content(url: str) -> bool:
 
 def get_video_id(url: str) -> str:
     reg = r"^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*"
-    video_id = re.search(reg, url).group(1)
-    return video_id
+    video_id = re.search(reg, url)
+    if video_id is None:
+        logger.info("Invalid youtube url", video_url=url)
+        return False
+
+    return video_id.group(1)
 
 
 def transcribe_video(video_id: str) -> str:
