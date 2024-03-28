@@ -19,6 +19,7 @@ def validate_url(url: str) -> bool:
         "https://www.youtube.com/watch?v=",
         "wwww.youtube.com/watch?v=",
         "youtube.com/watch?v=",
+        "https://youtu.be/6gwF8mG3UUY?si=RRz938"
     ]
     if any(map(url.startswith, valid_prefixes)):
         logger.info("Valid youtube url", video_url=url)
@@ -33,7 +34,12 @@ def validate_video_content(url: str) -> bool:
         request = yt_service.videos().list(part="snippet,contentDetails", id=url)
         response = request.execute()
 
-        duration = response["items"][0]["contentDetails"]["duration"]
+        try:
+            duration = response["items"][0]["contentDetails"]["duration"]
+        except IndexError:
+            logger.warning("Can't get video duration", yt_response=response)
+            return False
+
         if parse_duration(duration) > parse_duration(MAX_VIDEO_LENGTH):
             logger.info("Video duration too long", video_duration=duration, max_duration=MAX_VIDEO_LENGTH) 
             return False
