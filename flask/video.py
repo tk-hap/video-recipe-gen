@@ -13,19 +13,14 @@ formatter = TextFormatter()
 # TODO: Create a video class
 
 
-def validate_url(url: str) -> bool:
-    # TODO: Make this logic more robust, probably needs a regex
-    valid_prefixes = [
-        "https://www.youtube.com/watch?v=",
-        "wwww.youtube.com/watch?v=",
-        "youtube.com/watch?v=",
-        "https://youtu.be/6gwF8mG3UUY?si=RRz938"
-    ]
-    if any(map(url.startswith, valid_prefixes)):
-        logger.info("Valid youtube url", video_url=url)
-        return True
-    else:
+def get_video_id(url: str) -> str:
+    reg = r"^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*"
+    video_id = re.search(reg, url)
+    if video_id is None:
+        logger.info("Invalid youtube url", video_url=url)
         return False
+
+    return video_id.group(1)
 
 
 def validate_video_content(url: str) -> bool:
@@ -40,7 +35,11 @@ def validate_video_content(url: str) -> bool:
             return False
 
         if parse_duration(duration) > parse_duration(MAX_VIDEO_LENGTH):
-            logger.info("Video duration too long", video_duration=duration, max_duration=MAX_VIDEO_LENGTH) 
+            logger.info(
+                "Video duration too long",
+                video_duration=duration,
+                max_duration=MAX_VIDEO_LENGTH,
+            )
             return False
 
         title = response["items"][0]["snippet"]["title"]
@@ -57,18 +56,8 @@ def validate_video_content(url: str) -> bool:
                 logger.info("Cooking tags found", video_tags=tags, video_url=url)
                 return True
         else:
-                logger.info("No cooking tags found", video_tags=tags, video_url=url)
-                return False
-
-
-def get_video_id(url: str) -> str:
-    reg = r"^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*"
-    video_id = re.search(reg, url)
-    if video_id is None:
-        logger.info("Invalid youtube url", video_url=url)
-        return False
-
-    return video_id.group(1)
+            logger.info("No cooking tags found", video_tags=tags, video_url=url)
+            return False
 
 
 def transcribe_video(video_id: str) -> str:
