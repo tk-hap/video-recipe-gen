@@ -13,8 +13,10 @@ from recipe import create_recipe
 from config import REDIS_HOST, REDIS_PORT, REQUEST_LIMIT, REQUEST_TIMEOUT_SECS
 from models import RecipeGenerator
 import redis
+import structlog
 
 app = Flask(__name__)
+logger = structlog.get_logger()
 
 recipe = RecipeGenerator(details=None, video_id=None)
 
@@ -35,22 +37,25 @@ def max_requests():
 def submit_video():
     url = request.form["video"]
     video_id = get_video_id(url)
+    ip = request.environ.get("HTTP_X_FORWARDED_FOR", request.remote_addr)
     if video_id:
         recipe.video_id = video_id
         if not validate_video_content(recipe.video_id):
             return render_template("invalid-recipe.html")
         # Check if the user has exceeded the rate limit
-        if not redis_client.exists(request.remote_addr):
-            redis_client.set(request.remote_addr, 0)
-            redis_client.expire(request.remote_addr, REQUEST_TIMEOUT_SECS)
-        elif int(redis_client.get(request.remote_addr)) >= REQUEST_LIMIT:
+        if not redis_client.exists(ip):
+            redis_client.set(ip, 0)
+            redis_client.expire(ip, REQUEST_TIMEOUT_SECS)
+        elif int(redis_client.get(ip)) >= REQUEST_LIMIT:
+            logger.info("Requests over {REQUEST_LIMIT}", ip_address=ip)
             response = make_response("", 429)
             response.headers["HX-Redirect"] = url_for("max_requests")
             return response
 
         recipe.details = create_recipe(transcribe_video(recipe.video_id))
         recipe.generate_html()
-        redis_client.incr(request.remote_addr)
+        redis_client.incr(ip)
+        logger.info("Incremented requests for IP", ip_address=ip)
         return render_template(
             "display-recipe.html", video_id=recipe.video_id, recipe=recipe.details
         )
