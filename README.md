@@ -7,7 +7,7 @@ Try it at https://videorecipegen.com/
 ## Features
 
 - Transcribes YouTube cooking videos into text.
-- Summarizes the transcription into a recipe using OpenAI's GPT-3 model.
+- Summarizes the transcription into a recipe using OpenAI's GPT model.
 - Formats the response into a recipe card.
 - Limits the number of requests per user to prevent abuse.
 
@@ -40,3 +40,8 @@ Try it at https://videorecipegen.com/
 - The application limits the number of requests to 5 per user per day. This is done using the IP address of the user.
 - The application limits the duration of the video to 45 minutes. This is to prevent inputs greater than the models max tokens.
 - The accuracy of the recipe depends on the quality of the video transcription and the performance of the GPT-3 model.
+
+## Tests
+
+Building out the testing coverage.
+Tests can be run with pytest from the root directory using the command `pytest --envfile flask/.env` to set up the env.

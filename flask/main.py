@@ -1,5 +1,13 @@
 import os
-from flask import Flask, request, render_template, make_response, url_for, send_file, abort
+from flask import (
+    Flask,
+    request,
+    render_template,
+    make_response,
+    url_for,
+    send_file,
+    abort,
+)
 from video import validate_url, get_video_id, transcribe_video, validate_video_content
 from recipe import create_recipe
 from config import REDIS_HOST, REDIS_PORT, REQUEST_LIMIT, REQUEST_TIMEOUT_SECS
@@ -26,8 +34,9 @@ def max_requests():
 @app.route("/recipe", methods=["POST"])
 def submit_video():
     url = request.form["video"]
-    if validate_url(url):
-        recipe.video_id = get_video_id(url)
+    video_id = get_video_id(url)
+    if video_id:
+        recipe.video_id = video_id
         if not validate_video_content(recipe.video_id):
             return render_template("invalid-recipe.html")
         # Check if the user has exceeded the rate limit
@@ -66,7 +75,7 @@ def export_pdf(video_id: str) -> bytes:
 @app.route("/recipe/url", methods=["POST"])
 def validate_video():
     url = request.form["video"]
-    if not validate_url(url):
+    if not get_video_id(url):
         return render_template("invalid-video.html", url=url)
     else:
         return render_template("valid-video.html", url=url)
