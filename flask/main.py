@@ -8,7 +8,7 @@ from flask import (
     send_file,
     abort,
 )
-from video import validate_url, get_video_id, transcribe_video, validate_video_content
+from video import get_video_id, transcribe_video, validate_video_content
 from recipe import create_recipe
 from config import REDIS_HOST, REDIS_PORT, REQUEST_LIMIT, REQUEST_TIMEOUT_SECS
 from models import RecipeGenerator
