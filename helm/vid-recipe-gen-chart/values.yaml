@@ -1,0 +1,33 @@
+# Default values for vid-recipe-gen.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/tk-hap/video-recipe-gen-flask
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "148ac16ecba809972c933a2e6827dae7713ed83b"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  redisHost : "redis-sentinel.default.svc.cluster.local" #K8s Service
+  redisPort : 26379 #Redis Sentinel
+  requestLimit : 5
+  requestTimeoutSecs : 86400
+  maxVideoLength: "PT45M"
+  logLevel: "INFO"
+
+apiKeys:
+  openAiApiKey: ""
+  youtubeApiKey: ""
+

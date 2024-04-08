@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: {{ .Release.Name }}-vid-recipe-gen-flask-config
+data:
+    REDISHOST: {{ .Values.config.redisHost }}
+    REDISPORT: {{ .Values.config.redisPort | quote}}
+    REQUEST_LIMIT: {{ .Values.config.requestLimit | quote }}
+    REQUEST_TIMEOUT_SECS: {{ .Values.config.requestTimeoutSecs | quote }}
+    MAX_VIDEO_LENGTH: {{ .Values.config.maxVideoLength }}
+    LOG_LEVEL: {{ .Values.config.logLevel }}
+    OPENAI_API_KEY: {{ .Values.apiKeys.openAiApiKey }}
+    YOUTUBE_API_KEY: {{ .Values.apiKeys.youtubeApiKey }}
+
+
+
