@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-vid-recipe-gen-flask
+  labels:
+    service: web
+    app: vid-recipe-gen-flask
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: vid-recipe-gen-flask
+  template:
+    metadata:
+      labels:
+        service: web
+        app: vid-recipe-gen-flask
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }} #ghcr.io/tk-hap/video-recipe-gen-flask:148ac16ecba809972c933a2e6827dae7713ed83b
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-vid-recipe-gen-flask-config
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
