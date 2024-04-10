@@ -8,7 +8,7 @@ image:
   repository: ghcr.io/tk-hap/video-recipe-gen-flask
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "148ac16ecba809972c933a2e6827dae7713ed83b"
+  tag: "9e5619c197711159fdc6b5210c0cb652624ca2cb"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -20,8 +20,8 @@ service:
   targetPort: 8080
 
 config:
-  redisHost : "redis-sentinel.default.svc.cluster.local" #K8s Service
-  redisPort : 26379 #Redis Sentinel
+  redisHost : "redis-master.tk.svc.cluster.local" #K8s Service
+  redisPort : 6379
   requestLimit : 5
   requestTimeoutSecs : 86400
   maxVideoLength: "PT45M"
@@ -31,3 +31,5 @@ apiKeys:
   openAiApiKey: ""
   youtubeApiKey: ""
 
+ingress:
+  certificateArn: "arn:aws:acm:ap-southeast-2:223061654492:certificate/dd6bfe6f-2002-49cc-a8e0-fddb57b18b6c"

@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
     name: {{ .Release.Name }}-vid-recipe-gen-flask-config
 data:
-    REDISHOST: {{ .Values.config.redisHost }}
-    REDISPORT: {{ .Values.config.redisPort | quote}}
+    REDIS_HOST: {{ .Values.config.redisHost }}
+    REDIS_PORT: {{ .Values.config.redisPort | quote}}
     REQUEST_LIMIT: {{ .Values.config.requestLimit | quote }}
     REQUEST_TIMEOUT_SECS: {{ .Values.config.requestTimeoutSecs | quote }}
     MAX_VIDEO_LENGTH: {{ .Values.config.maxVideoLength }}
