@@ -1,9 +1,7 @@
-name: Build Image CI
+name: CI - Build Image
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 env:
