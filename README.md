@@ -21,6 +21,9 @@ Try it at https://videorecipegen.com/
 - Pico CSS: A minimalistic CSS framework.
 - HTMX: Used to provide dynamic HTML content.
 
+### Infrastructure
+- Kubernetes (EKS): Application and Redis are currently run in EKS, installed via the helm chart
+
 ## Local installation
 
 1. Clone the repository.
@@ -41,7 +44,16 @@ Try it at https://videorecipegen.com/
 - The application limits the duration of the video to 45 minutes. This is to prevent inputs greater than the models max tokens.
 - The accuracy of the recipe depends on the quality of the video transcription and the performance of the GPT-3 model.
 
+## CI/CD
+CI Actions can be found at `./github/workflows/`.
+Container images are automatically built on pushes to `main`.
+Linting/Formatting is automatically ran on every push, using [ruff](https://github.com/astral-sh/ruff)
+
+CD automation is WIP, currently deployed via helm chart into EKS.
+Migrating to ArgoCD GitOps running on a homelab K8s cluster.
+
 ## Tests
 
 Building out the testing coverage.
 Tests can be run with pytest from the root directory using the command `pytest --envfile flask/.env` to set up the env.
+
